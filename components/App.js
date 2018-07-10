@@ -7,24 +7,9 @@ App = React.createClass({
 			gif: {}
 		};
 	},
-	
-	handleSearch: function(searchingText) {  
-		this.setState({
-		  	loading: true 
-		});
-		this.getGif(searchingText, function(gif) {  
-		  	this.setState({ 
-				loading: false, 
-				gif: gif,  
-				searchingText: searchingText  
-		  	});
-		}.bind(this));
-  	},
-
-
-	
+	 
 	getGif: function(searchingText) {  
-        return new Promise(function(resolve, reject){
+        return new Promise(function(resolve, reject) {
             var GIPHY_API_URL = "https://api.giphy.com";
             var GIPHY_PUB_KEY = "bb2006d9d3454578be1a99cfad65913d";
             var url = GIPHY_API_URL + '/v1/gifs/random?api_key=' + GIPHY_PUB_KEY + '&tag=' + searchingText; 
@@ -32,7 +17,7 @@ App = React.createClass({
             xhr.open('GET', url);
             xhr.onload = function() {
                 if (xhr.status === 200) {
-                       var data = JSON.parse(xhr.responseText).data; 
+                    var data = JSON.parse(xhr.responseText).data; 
                     var gif = {  
                         url: data.fixed_width_downsampled_url,
                         sourceUrl: data.url
@@ -46,11 +31,22 @@ App = React.createClass({
             };
             xhr.send();
 	    });
-	},
+    },
 
-	
+    handleSearch: function(searchingText) { 
+        this.setState({
+          loading: true 
+        });
+        this.getGif(searchingText).then((gif)=> { 
+            this.setState({ 
+                loading: false,  
+                gif: gif,  
+                searchingText: searchingText 
+            });
+        });
+    },
+    
     render: function() {
-
         var styles = {
             margin: '0 auto',
             textAlign: 'center',
